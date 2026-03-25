@@ -1,0 +1,21 @@
+This is the installation file for the libcapcomm package.
+
+Mandatory Prerequisites
+-----------------------
+Qt v5.9.7 or later.
+Cross-platform development toolkit. Available at https://www.qt.io/.
+
+Building the Library
+--------------------
+Once the prereequites have been installed, the library can be built by means
+of the following commands:
+
+./configure
+make
+make install
+
+The configure script has a number of optional switches to control what gets
+built and where things get installed. Do './configure --help' to get a list.
+
+For examples of how to use the library, see the programs in the 'tests/'
+subdirectory.

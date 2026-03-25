@@ -1,0 +1,10 @@
+This is the README file for the libcapcomm package.
+
+This software comes with ABSOLUTELY NO WARRANTY.  See the file COPYING for
+details.
+
+Libcapcomm is a C++ library for reading and generating Common Alerting
+Protocol [CAP] messages. It aims toward compliance with CAP v1.2.
+
+Information regarding CAP can be found at:
+    https://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1.2-os.pdf
