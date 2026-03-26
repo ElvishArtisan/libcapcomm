@@ -54,20 +54,27 @@ class CCInfo
   CCInfo();
   QString language() const;
   void setLanguage(const QString &str);
-  Category category() const;
-  void setCategory(Category category);
+  int categoryQuantity() const;
+  Category categoryAt(int n) const;
+  int addCategory(Category category);
+  int addCategory(const QString &str);
+  void removeCategoryAt(int n);
   QString event() const;
   void setEvent(const QString &str);
   int responseTypeQuantity() const;
   ResponseType responseTypeAt(int n);
   int addResponseType(const ResponseType &resp_type);
+  int addResponseType(const QString &str);
   void removeResponseTypeAt(int n);
   Urgency urgency() const;
   void setUrgency(Urgency urg);
+  void setUrgency(const QString &str);
   Severity severity() const;
   void setSeverity(Severity sev);
+  void setSeverity(const QString &str);
   Certainty certainty() const;
   void setCertainty(Certainty cert);
+  void setCertainty(const QString &str);
   QString audience() const;
   void setAudience(const QString &str);
   QStringList eventCodeNames() const;
@@ -76,10 +83,13 @@ class CCInfo
   void removeEventCode(const QString &name);
   QDateTime effective() const;
   void setEffective(const QDateTime &dt);
+  void setEffective(const QString &str);
   QDateTime onset() const;
   void setOnset(const QDateTime &dt);
+  void setOnset(const QString &str);
   QDateTime expires() const;
   void setExpires(const QDateTime &dt);
+  void setExpires(const QString &str);
   QString senderName() const;
   void setSenderName(const QString &str);
   QString headline() const;
@@ -118,7 +128,7 @@ class CCInfo
   
  private:
   QString d_language;
-  Category d_category;
+  QList<Category> d_categories;
   QString d_event;
   QList<ResponseType> d_response_types;
   Urgency d_urgency;

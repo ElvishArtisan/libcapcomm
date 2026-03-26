@@ -29,6 +29,7 @@
 class CCPolygon
 {
  public:
+  CCPolygon(QList<CCPoint> pts);
   CCPolygon();
   QList<CCPoint> points() const;
   void setPoints(QList<CCPoint> pts);

@@ -5,6 +5,8 @@ Mandatory Prerequisites
 Qt v5.9.7 or later.
 Cross-platform development toolkit. Available at https://www.qt.io/.
 
+
+
 Building the Library
 --------------------
 Once the prereequites have been installed, the library can be built by means

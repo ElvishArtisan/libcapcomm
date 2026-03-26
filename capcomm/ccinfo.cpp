@@ -39,15 +39,34 @@ void CCInfo::setLanguage(const QString &str)
 }
 
 
-CCInfo::Category CCInfo::category() const
+int CCInfo::categoryQuantity() const
 {
-  return d_category;
+  return d_categories.size();
 }
 
 
-void CCInfo::setCategory(Category category)
+CCInfo::Category CCInfo::categoryAt(int n) const
 {
-  d_category=category;
+  return d_categories.at(n);
+}
+
+
+int CCInfo::addCategory(CCInfo::Category category)
+{
+  d_categories.push_back(category);
+  return d_categories.size()-1;
+}
+
+
+int CCInfo::addCategory(const QString &str)
+{
+  return addCategory(CCInfo::categoryFromString(str));
+}
+
+
+void CCInfo::removeCategoryAt(int n)
+{
+  d_categories.removeAt(n);
 }
 
 
@@ -82,6 +101,12 @@ int CCInfo::addResponseType(const ResponseType &resp_type)
 }
 
 
+int CCInfo::addResponseType(const QString &str)
+{
+  return addResponseType(CCInfo::responseTypeFromString(str));
+}
+
+
 void CCInfo::removeResponseTypeAt(int n)
 {
   d_response_types.removeAt(n);
@@ -100,6 +125,12 @@ void CCInfo::setUrgency(CCInfo::Urgency urg)
 }
 
 
+void CCInfo::setUrgency(const QString &str)
+{
+  setUrgency(CCInfo::urgencyFromString(str));
+}
+
+
 CCInfo::Severity CCInfo::severity() const
 {
   return d_severity;
@@ -112,6 +143,12 @@ void CCInfo::setSeverity(CCInfo::Severity sev)
 }
 
 
+void CCInfo::setSeverity(const QString &str)
+{
+  setSeverity(CCInfo::severityFromString(str));
+}
+
+
 CCInfo::Certainty CCInfo::certainty() const
 {
   return d_certainty;
@@ -121,6 +158,12 @@ CCInfo::Certainty CCInfo::certainty() const
 void CCInfo::setCertainty(CCInfo::Certainty cert)
 {
   d_certainty=cert;
+}
+
+
+void CCInfo::setCertainty(const QString &str)
+{
+  setCertainty(CCInfo::certaintyFromString(str));
 }
 
 
@@ -171,6 +214,12 @@ void CCInfo::setEffective(const QDateTime &dt)
 }
 
 
+void CCInfo::setEffective(const QString &str)
+{
+  setEffective(QDateTime::fromString(str,Qt::ISODate));
+}
+
+
 QDateTime CCInfo::onset() const
 {
   return d_onset;
@@ -183,6 +232,12 @@ void CCInfo::setOnset(const QDateTime &dt)
 }
 
 
+void CCInfo::setOnset(const QString &str)
+{
+  setOnset(QDateTime::fromString(str,Qt::ISODate));
+}
+
+
 QDateTime CCInfo::expires() const
 {
   return d_expires;
@@ -192,6 +247,12 @@ QDateTime CCInfo::expires() const
 void CCInfo::setExpires(const QDateTime &dt)
 {
   d_expires=dt;
+}
+
+
+void CCInfo::setExpires(const QString &str)
+{
+  setExpires(QDateTime::fromString(str,Qt::ISODate));
 }
 
 
@@ -344,7 +405,7 @@ void CCInfo::removeAreaAt(int n)
 void CCInfo::clear()
 {
   d_language="en_US";
-  d_category=CCInfo::CategoryUnknown;
+  d_categories.clear();
   d_event=QString();;
   d_response_types.clear();
   d_urgency=CCInfo::UrgencyUnknown;

@@ -21,6 +21,12 @@
 
 #include "ccpolygon.h"
 
+CCPolygon::CCPolygon(QList<CCPoint> pts)
+{
+  d_points=pts;
+}
+
+
 CCPolygon::CCPolygon()
 {
 }

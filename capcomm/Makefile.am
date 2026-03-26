@@ -20,7 +20,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -Wno-strict-aliasing -std=c++11 -fPIC -I$(top_srcdir) @QT5_CFLAGS@
+AM_CPPFLAGS = -Wall -Wno-strict-aliasing -std=c++11 -fPIC -I$(top_srcdir) @QT5_CFLAGS@ @EXPAT_CFLAGS@
 MOC = @QT_MOC@
 
 # The dependency for qt's Meta Object Compiler (moc)
@@ -31,7 +31,7 @@ clean-local:
 	rm -rf debug release
 
 lib_LTLIBRARIES = libcapcomm.la
-dist_libcapcomm_la_SOURCES = ccalert.cpp ccalert.h\
+dist_libcapcomm_la_SOURCES = ccalert.cpp ccalert_expat.cpp ccalert.h\
                              ccarea.cpp ccarea.h\
                              cccircle.cpp cccircle.h\
                              ccinfo.cpp ccinfo.h\

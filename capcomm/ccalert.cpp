@@ -76,6 +76,12 @@ void CCAlert::setStatus(CCAlert::AlertStatus status)
 }
 
 
+void CCAlert::setStatus(const QString &str)
+{
+  setStatus(CCAlert::statusFromString(str));
+}
+
+
 CCAlert::MsgType CCAlert::msgType() const
 {
   return d_msg_type;
@@ -85,6 +91,12 @@ CCAlert::MsgType CCAlert::msgType() const
 void CCAlert::setMsgType(const MsgType type)
 {
   d_msg_type=type;
+}
+
+
+void CCAlert::setMsgType(const QString &str)
+{
+  setMsgType(CCAlert::msgTypeFromString(str));
 }
 
 
@@ -109,6 +121,12 @@ CCAlert::Scope CCAlert::scope() const
 void CCAlert::setScope(CCAlert::Scope scope)
 {
   d_scope=scope;
+}
+
+
+void CCAlert::setScope(const QString &str)
+{
+  setScope(CCAlert::scopeFromString(str));
 }
 
 
@@ -211,13 +229,38 @@ void CCAlert::removeReferenceAt(int n)
 }
 
 
+int CCAlert::incidentQuantity() const
+{
+  return d_incidents.size();
+}
+
+
+QString CCAlert::incidentAt(int n) const
+{
+  return d_incidents.at(n);
+}
+
+
+int CCAlert::addIncident(const QString &identifier)
+{
+  d_incidents.push_back(identifier);
+  return d_incidents.size()-1;
+}
+
+
+void CCAlert::removeIncidentAt(int n)
+{
+  d_incidents.removeAt(n);
+}
+
+
 int CCAlert::infoQuantity() const
 {
   return d_infos.size();
 }
 
 
-CCInfo CCAlert::infoAt(int n) const
+CCInfo *CCAlert::infoAt(int n) const
 {
   return d_infos.at(n);
 }
@@ -225,7 +268,7 @@ CCInfo CCAlert::infoAt(int n) const
 
 int CCAlert::addInfo(const CCInfo &info)
 {
-  d_infos.push_back(info);
+  d_infos.push_back(new CCInfo(info));
   return d_infos.size()-1;
 }
 
@@ -282,69 +325,78 @@ QByteArray CCAlert::toXml()
     }
     ret+=writeField("references",field.trimmed());
   }
-
+  if(incidentQuantity()>0) {
+    QString field="";
+    for(int i=0;i<incidentQuantity();i++) {
+      field+=incidentAt(i)+" ";
+    }
+    ret+=writeField("incidents",field.trimmed());
+  }
+  
   //
   // <info> Section(s)
   //
   for(int i=0;i<d_infos.size();i++) {
-    CCInfo info=d_infos.at(i);
+    CCInfo *info=d_infos.at(i);
     ret+=writeOpenTag("info");
-    if(!info.language().isEmpty()) {
-      ret+=writeField("language",info.language());
+    if(!info->language().isEmpty()) {
+      ret+=writeField("language",info->language());
     }
-    ret+=writeField("category",CCInfo::categoryString(info.category()));
-    ret+=writeField("event",info.event());
-    for(int j=0;j<info.responseTypeQuantity();j++) {
+    for(int j=0;j<info->categoryQuantity();j++) {
+      ret+=writeField("category",CCInfo::categoryString(info->categoryAt(j)));
+    }
+    ret+=writeField("event",info->event());
+    for(int j=0;j<info->responseTypeQuantity();j++) {
       ret+=writeField("responseType",
-		      CCInfo::responseTypeString(info.responseTypeAt(j)));
+		      CCInfo::responseTypeString(info->responseTypeAt(j)));
     }
-    ret+=writeField("urgency",CCInfo::urgencyString(info.urgency()));
-    ret+=writeField("severity",CCInfo::severityString(info.severity()));
-    ret+=writeField("certainty",CCInfo::certaintyString(info.certainty()));
-    if(!info.audience().isEmpty()) {
-      ret+=writeField("audience",info.audience());
+    ret+=writeField("urgency",CCInfo::urgencyString(info->urgency()));
+    ret+=writeField("severity",CCInfo::severityString(info->severity()));
+    ret+=writeField("certainty",CCInfo::certaintyString(info->certainty()));
+    if(!info->audience().isEmpty()) {
+      ret+=writeField("audience",info->audience());
     }
-    QStringList names=info.eventCodeNames();
+    QStringList names=info->eventCodeNames();
     for(int j=0;j<names.size();j++) {
-      ret+=writeField("eventCode",info.eventCodeValue(names.at(j)));
+      ret+=writeField("eventCode",info->eventCodeValue(names.at(j)));
     }
-    if(info.effective().isValid()) {
-      ret+=writeField("effective",info.effective());
+    if(info->effective().isValid()) {
+      ret+=writeField("effective",info->effective());
     }
-    if(info.onset().isValid()) {
-      ret+=writeField("onset",info.onset());
+    if(info->onset().isValid()) {
+      ret+=writeField("onset",info->onset());
     }
-    if(info.expires().isValid()) {
-      ret+=writeField("expires",info.expires());
+    if(info->expires().isValid()) {
+      ret+=writeField("expires",info->expires());
     }
-    if(!info.senderName().isEmpty()) {
-      ret+=writeField("senderName",info.senderName());
+    if(!info->senderName().isEmpty()) {
+      ret+=writeField("senderName",info->senderName());
     }
-    if(!info.headline().isEmpty()) {
-      ret+=writeField("headline",info.headline());
+    if(!info->headline().isEmpty()) {
+      ret+=writeField("headline",info->headline());
     }
-    if(!info.instruction().isEmpty()) {
-      ret+=writeField("instruction",info.instruction());
+    if(!info->instruction().isEmpty()) {
+      ret+=writeField("instruction",info->instruction());
     }
-    if(!info.web().isEmpty()) {
-      ret+=writeField("web",info.web());
+    if(!info->web().isEmpty()) {
+      ret+=writeField("web",info->web());
     }
-    if(!info.contact().isEmpty()) {
-      ret+=writeField("contact",info.contact());
+    if(!info->contact().isEmpty()) {
+      ret+=writeField("contact",info->contact());
     }
-    names=info.parameterNames();
+    names=info->parameterNames();
     for(int j=0;j<names.size();j++) {
       ret+=writeOpenTag("parameter");
       ret+=writeField("valueName",names.at(j));
-      ret+=writeField("value",info.parameterValue(names.at(j)));
+      ret+=writeField("value",info->parameterValue(names.at(j)));
       ret+=writeCloseTag("parameter");
     }
 
     //
     // <resource> Sections
     //
-    for(int j=0;j<info.resourceQuantity();j++) {
-      CCResource res=info.resourceAt(j);
+    for(int j=0;j<info->resourceQuantity();j++) {
+      CCResource res=info->resourceAt(j);
       ret+=writeOpenTag("resource");
       ret+=writeField("resourceDesc",res.resourceDesc());
       ret+=writeField("mimeType",res.mimeType());
@@ -367,8 +419,8 @@ QByteArray CCAlert::toXml()
     //
     // <area> Sections
     //
-    for(int j=0;j<info.areaQuantity();j++) {
-      CCArea area=info.areaAt(j);
+    for(int j=0;j<info->areaQuantity();j++) {
+      CCArea area=info->areaAt(j);
       ret+=writeOpenTag("area");
       ret+=writeField("areaDesc",area.areaDesc());
       if(area.altitude()>=0) {
@@ -429,6 +481,7 @@ void CCAlert::clear()
   d_codes.clear();
   d_note=QString();
   d_references.clear();
+  d_incidents.clear();
   d_infos.clear();
 }
 

@@ -88,6 +88,11 @@ AC_CHECK_PROG(MOC_NAME,moc-qt5,[moc-qt5],[moc])
 AC_SUBST(QT_MOC,$MOC_NAME)
 
 #
+# Check for Expat (Mandatory)
+#
+PKG_CHECK_MODULES(EXPAT,expat,[],[AC_MSG_ERROR([*** Expat parser library not found ***])])
+
+#
 # Determine Distro
 #
 AR_GET_DISTRO()

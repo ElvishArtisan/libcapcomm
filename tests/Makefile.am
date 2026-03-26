@@ -20,7 +20,7 @@
 ##
 ## Use automake to process this into a Makefile.in
 
-AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -pthread -I$(top_srcdir) -std=c++11 -fPIC @QT5_CFLAGS@ @QT5GUI_CFLAGS@
+AM_CPPFLAGS = -Wall -DPREFIX=\"$(prefix)\" -pthread -I$(top_srcdir) -std=c++11 -fPIC @QT5_CFLAGS@ @EXPAT_CFLAGS@
 LIBS = -L$(top_srcdir)/capcomm @QT5_LIBS@
 MOC = @QT_MOC@
 
@@ -33,7 +33,7 @@ noinst_PROGRAMS = parsertest
 
 dist_parsertest_SOURCES = parsertest.cpp parsertest.h
 nodist_parsertest_SOURCES = moc_parsertest.cpp
-parsertest_LDADD = -lcapcomm
+parsertest_LDADD = -lcapcomm @EXPAT_LIBS@
 #parsertest_LDFLAGS = @SWITCHYARDFLAGS@
 
 CLEANFILES = *~\

@@ -25,9 +25,11 @@
 #include <QDateTime>
 #include <QString>
 
- class CCReference
- {
+class CCReference
+{
  public:
+  CCReference(const QString &sender,const QString &identifier,
+	      const QDateTime &sent);
   CCReference();
   QString sender() const;
   void setSender(const QString &str);

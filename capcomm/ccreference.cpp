@@ -21,6 +21,15 @@
 
 #include "ccreference.h"
 
+CCReference::CCReference(const QString &sender,const QString &identifier,
+			 const QDateTime &sent)
+{
+  d_sender=sender;
+  d_identifier=identifier;
+  d_sent=sent;
+}
+
+
 CCReference::CCReference()
 {
   clear();

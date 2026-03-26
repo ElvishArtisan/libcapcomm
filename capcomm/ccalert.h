@@ -49,12 +49,15 @@ class CCAlert : public CCXmlDoc
    void setSent(const QDateTime &dt);
    AlertStatus status() const;
    void setStatus(AlertStatus status);
+   void setStatus(const QString &str);
    MsgType msgType() const;
    void setMsgType(const MsgType type);
+   void setMsgType(const QString &str);
    QString source() const;
    void setSource(const QString &str);
    Scope scope() const;
    void setScope(Scope scope);
+   void setScope(const QString &str);
    QString restriction() const;
    void setRestriction(const QString &str);
    int addressQuantity() const;
@@ -71,9 +74,12 @@ class CCAlert : public CCXmlDoc
    CCReference referenceAt(int n) const;
    int addReference(const CCReference &ref);
    void removeReferenceAt(int n);
-   // FIXME: add support for 'incidents'?
+   int incidentQuantity() const;
+   QString incidentAt(int n) const;
+   int addIncident(const QString &identifier);
+   void removeIncidentAt(int n);
    int infoQuantity() const;
-   CCInfo infoAt(int n) const;
+   CCInfo *infoAt(int n) const;
    int addInfo(const CCInfo &info);
    void removeInfoAt(int n);
    QByteArray toXml();
@@ -84,6 +90,7 @@ class CCAlert : public CCXmlDoc
    static MsgType msgTypeFromString(const QString &str);
    static QString scopeString(Scope scope);
    static Scope scopeFromString(const QString &str);
+   static CCAlert fromXml(const QByteArray &xml,bool *ok=NULL);
 
  private:
    QString d_identifier;
@@ -98,7 +105,8 @@ class CCAlert : public CCXmlDoc
    QStringList d_codes;
    QString d_note;
    QList<CCReference> d_references;
-   QList<CCInfo> d_infos;
+   QStringList d_incidents;
+   QList<CCInfo *> d_infos;
  };
 
 

@@ -23,6 +23,8 @@
 #include <stdlib.h>
 
 #include <QCoreApplication>
+#include <QFile>
+#include <QTextStream>
 
 #include <capcomm/ccalert.h>
 #include <capcomm/ccarea.h>
@@ -34,6 +36,7 @@
 MainObject::MainObject()
   : QObject()
 {
+  /*
   CCAlert *alert=new CCAlert();
   alert->setIdentifier("123456");
   alert->setSender("fredg@paravelsystems.com");
@@ -105,7 +108,24 @@ MainObject::MainObject()
   alert->addInfo(info);
 
   printf("%s\n",alert->toXml().constData());
+  */
+
+  QFile file("/home/fredg/dev/libcapcomm/tests/fixtures/appendix_a2.xml");
+  if(file.open(QFile::ReadOnly)) {
+    QTextStream in(&file);
+    QString xml=in.readAll();
+
+    bool ok=false;
+    CCAlert alert=CCAlert::fromXml(xml.toUtf8(),&ok);
+    printf("XML: %s\n",alert.toXml().constData());
+  }
+  else {
+    fprintf(stderr,"parsertest: failed to open XML\n");
+    exit(1);
+  }
+  file.close();
   
+
   exit(0);
 }
 
